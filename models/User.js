@@ -1,6 +1,6 @@
-const { Model, DataTypes } = require("sequelize");
-const bcrypt = require("bcrypt");
-const sequelize = require("../config/connection");
+const { Model, DataTypes } = require('sequelize');
+const bcrypt = require('bcrypt');
+const sequelize = require('../config/connection');
 
 // create our User model
 class User extends Model {
@@ -17,27 +17,27 @@ User.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: true
     },
     username: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
       validate: {
-        isEmail: true,
-      },
+        isEmail: true
+      }
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [4],
-      },
-    },
+        len: [4]
+      }
+    }
   },
   {
     hooks: {
@@ -48,84 +48,16 @@ User.init(
       },
 
       async beforeUpdate(updatedUserData) {
-        updatedUserData.password = await bcrypt.hash(
-          updatedUserData.password,
-          10
-        );
+        updatedUserData.password = await bcrypt.hash(updatedUserData.password, 10);
         return updatedUserData;
-      },
+      }
     },
     sequelize,
     timestamps: false,
     freezeTableName: true,
     underscored: true,
-    modelName: "user",
+    modelName: 'user'
   }
 );
 
 module.exports = User;
-
-// const { Model, DataTypes } = require("sequelize");
-// const sequelize = require("../config/connection");
-
-// //create User model
-// class User extends Model {}
-
-// //define table columns and configuration
-// User.init(
-//   {
-//     //table column definitions go here
-//     //define and id column
-//     id: {
-//       // use the special Sequelize DataTypes object provide what type of data it is
-//       type: DataTypes.INTEGER,
-//       //this is the equivilant of SQL's NOT NULL option
-//       allowNull: false,
-//       //instruct that this is the primary key
-//       primaryKey: true,
-//       //turn on auto incriment
-//       autoIncrement: true,
-//     },
-//     //define a username column
-//     username: {
-//       type: DataTypes.STRING,
-//       allowNull: false,
-//     },
-//     //define an email column
-//     email: {
-//       type: DataTypes.STRING,
-//       allowNull: false,
-//       //there cannot be any duplicate email values in this table
-//       unique: true,
-//       //if allownull is set to false we can run our data through validator
-//       validate: {
-//         isEmail: true,
-//       },
-//     },
-//     //define a password column
-//     password: {
-//       type: DataTypes.STRING,
-//       allowNull: false,
-//       validate: {
-//         //this means the password must be at least 4 characters long
-//         len: [4],
-//       },
-//     },
-//   },
-//   {
-//     // TABLE CONFIGURATION OPTIONS GO HERE (https://sequelize.org/v5/manual/models-definition.html#configuration))
-
-//     //pass in our imported sequelize connection (the direct connection to our database)
-//     sequelize,
-//     //dont automatically create createdAt/updatedAt timestamp fields
-//     timestamps: false,
-//     //dont pluralize name of database tables
-//     freezeTableName: true,
-//     //use underascores instead of camelcasing (i.e. `comment_text` and not `commentText`)
-//     underscored: true,
-//     //make it so out model name stays lowercase in database
-//     modelName: "user",
-//   }
-// );
-
-// module.exports = User;
